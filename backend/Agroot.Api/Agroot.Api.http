@@ -1,6 +1,55 @@
-@Agroot.Api_HostAddress = http://localhost:5136
+@baseUrl = http://localhost:5136
 
-GET {{Agroot.Api_HostAddress}}/weatherforecast/
+### GET all / Expected: 200 + list
+GET {{baseUrl}}/api/readings
 Accept: application/json
 
-###
+### POST a full reading / Expected: 201
+POST {{baseUrl}}/api/readings
+Content-Type: application/json
+
+{
+    "deviceId": "esp31",
+    "airTemp": 24.5,
+    "airHumidity": 65.0,
+    "soilTemp": 21.2,
+    "soilMoisture": 42,
+    "plantSignalMv": 12.8
+}
+
+### GET by Id 1 / Expected: 200
+GET {{baseUrl}}/api/readings/1
+Accept: application/json
+
+### GET by Id 999 / Expected: 404
+GET {{baseUrl}}/api/readings/999
+Accept: application/json
+
+### POST without deviceId field / Expected: 400
+POST {{baseUrl}}/api/readings
+Content-Type: application/json
+
+{
+    "airTemp": 24.5,
+    "airHumidity": 65.0,
+    "soilTemp": 21.2,
+    "soilMoisture": 42,
+    "plantSignalMv": 12.8
+}
+
+### GET searching by invalid path Id type / Expected: 404
+GET {{baseUrl}}/api/readings/abc
+Accept: application/json
+
+### POST with a wrong type / Expected: 400
+POST {{baseUrl}}/api/readings
+Content-Type: application/json
+
+{
+    "deviceId": "esp31",
+    "airTemp": "hot",
+    "airHumidity": 65.0,
+    "soilTemp": 21.2,
+    "soilMoisture": 42,
+    "plantSignalMv": 12.8
+}
